@@ -5,7 +5,6 @@ function getRandomInt(min, max) {
 }
 
 var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
 
 var similarListElement = setup.querySelector('.setup-similar-list');
 
@@ -55,3 +54,94 @@ function wizardsFillBlock() {
 var wizards = wizardsGenerate(4);
 
 wizardsFillBlock();
+
+// 1. Открытие/закрытие окна настройки персонажа:
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var userNameInput = setup.querySelector('.setup-user-name');
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && userNameInput !== document.activeElement) {
+    closePopup();
+  }
+};
+
+setupOpen.addEventListener('click', openPopup);
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', closePopup);
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
+
+// 3. Изменение цвета мантии персонажа по нажатию. 4.Изменение цвета глаз персонажа по нажатию. 5.Изменение цвета фаерболов по нажатию.
+
+var userWizard = setup.querySelector('.setup-wizard');
+
+var userWizardCoat = userWizard.querySelector('.wizard-coat');
+var userWizardEyes = userWizard.querySelector('.wizard-eyes');
+var userWizardFireball = setup.querySelector('.setup-fireball-wrap');
+
+var hiddenWizardCoat = setup.querySelector('input[name=coat-color]');
+var hiddenWizardEyes = setup.querySelector('input[name=eyes-color]');
+var hiddenWizardFireball = setup.querySelector('input[name=fireball-color]');
+
+var fireballColor = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+
+var coatColorCount = 1;
+var eyesColorCount = 1;
+var fireballColorCount = 1;
+
+var changeColor = function (evt) {
+  if (evt.currentTarget === userWizardCoat) {
+    userWizardCoat.style.fill = coatColor[coatColorCount];
+    hiddenWizardCoat.value = coatColor[coatColorCount];
+    coatColorCount++;
+    if (coatColorCount === coatColor.length) {
+      coatColorCount = 0;
+    }
+  }
+
+  if (evt.currentTarget === userWizardEyes) {
+    userWizardEyes.style.fill = eyesColor[eyesColorCount];
+    hiddenWizardEyes.value = eyesColor[eyesColorCount];
+    eyesColorCount++;
+    if (eyesColorCount === eyesColor.length) {
+      eyesColorCount = 0;
+    }
+  }
+
+  if (evt.currentTarget === userWizardFireball) {
+    userWizardFireball.style.background = fireballColor[fireballColorCount];
+    hiddenWizardFireball.value = fireballColor[fireballColorCount];
+    fireballColorCount++;
+    if (fireballColorCount === fireballColor.length) {
+      fireballColorCount = 0;
+    }
+  }
+};
+
+userWizardCoat.addEventListener('click', changeColor);
+userWizardEyes.addEventListener('click', changeColor);
+userWizardFireball.addEventListener('click', changeColor);
