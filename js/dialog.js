@@ -2,6 +2,7 @@
 
 (function () {
 
+
   var setup = document.querySelector('.setup');
   var draggableAvatar = setup.querySelector('.upload');
   // 1. Открытие/закрытие окна настройки персонажа:
@@ -9,7 +10,8 @@
   var setupClose = setup.querySelector('.setup-close');
   var userNameInput = setup.querySelector('.setup-user-name');
   var userWizard = setup.querySelector('.setup-wizard');
-
+  var submit = setup.querySelector('.setup-submit');
+  var wizardForm = setup.querySelector('.setup-wizard-form');
   var userWizardCoat = userWizard.querySelector('.wizard-coat');
   var userWizardEyes = userWizard.querySelector('.wizard-eyes');
   var userWizardFireball = setup.querySelector('.setup-fireball-wrap');
@@ -63,6 +65,25 @@
   setupClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, closePopup);
   });
+
+  // Обработчик отправки данных на сервер
+
+  var onLoad = function () {
+    closePopup();
+  };
+
+
+  var onError = function (message) {
+    window.errorPopup.createErrorElement(message);
+  };
+
+  var submitFormData = function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(wizardForm);
+    window.backend.save(formData, onLoad, onError);
+  };
+
+  submit.addEventListener('click', submitFormData);
 
   // 3. Изменение цвета мантии персонажа по нажатию. 4.Изменение цвета глаз персонажа по нажатию. 5.Изменение цвета фаерболов по нажатию.
   var changeColor = function (evt) {
